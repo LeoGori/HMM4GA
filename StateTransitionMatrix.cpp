@@ -3,23 +3,29 @@
 #include<random>
 #include<bits/stdc++.h>
 
-using namespace std;
+
 
 
 StateTransitionMatrix::StateTransitionMatrix() {
 
-    nucleotides = {
-            { 'A', 0 },
-            { 'C', 1 },
-            { 'G', 2 },
-            { 'T', 3 },
+//    states = {
+//            { 'A', 0 },
+//            { 'C', 1 },
+//            { 'G', 2 },
+//            { 'T', 3 },
+//    };
+
+    states = {
+            { 'M', 0 },
+            { 'I', 1 },
+            { 'D', 2 },
     };
 
 }
 
 float StateTransitionMatrix::getTransitionProbability(char char1, char char2) {
 
-    float probability = transitionMatrix[nucleotides[char1]][nucleotides[char2]];
+    float probability = transitionMatrix[states[char1]][states[char2]];
 
     return probability;
 }
@@ -37,10 +43,10 @@ void StateTransitionMatrix::populateMatrix() {
 
     vector<float> values;
 
-    for(int i=0; i<nucleotides.size(); i++){
+    for(int i=0; i < states.size(); i++){
 
         int sum = 0;
-        for (int j=0; j< nucleotides.size(); j++) {
+        for (int j=0; j < states.size(); j++) {
 
             int value = dist(gen);
 
@@ -48,7 +54,7 @@ void StateTransitionMatrix::populateMatrix() {
             values.push_back(static_cast<float>(value));
 
         }
-        for (int j = 0; j < nucleotides.size(); j++) {
+        for (int j = 0; j < states.size(); j++) {
             values[j] /= (float) sum;
         }
         transitionMatrix.push_back(values);
@@ -64,17 +70,17 @@ void StateTransitionMatrix::populateMatrix() {
 
 ostream& operator<<(ostream& out, const StateTransitionMatrix& stm) {
 
-    char nuc[4] = {'A', 'C', 'G', 'T'};
+    char state[3] = {'M', 'I', 'D'};
     out << "    |";
-    for (int i = 0; i < stm.nucleotides.size(); i++) {
-        out << "   " << nuc[i] << "   |";
+    for (int i = 0; i < stm.states.size(); i++) {
+        out << "   " << state[i] << "   |";
     }
     out << endl;
 
-    for(int i=0; i < stm.nucleotides.size(); i++){
+    for(int i=0; i < stm.states.size(); i++){
         out << "|";
-        out << " " << nuc[i] << " |";
-        for(int j=0; j < stm.nucleotides.size(); j++){
+        out << " " << state[i] << " |";
+        for(int j=0; j < stm.states.size(); j++){
 
             float value = stm.transitionMatrix[i][j];
             out << " " << fixed << setprecision(3) <<  value << " |";

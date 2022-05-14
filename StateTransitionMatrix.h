@@ -10,7 +10,7 @@ class StateTransitionMatrix {
 
 private:
     vector<vector<float>> transitionMatrix;
-    map<char, int> nucleotides;
+    map<char, int> states;
 
 public:
     StateTransitionMatrix();
