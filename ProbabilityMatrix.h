@@ -5,6 +5,12 @@
 #include<map>
 #include<iostream>
 
+/*
+ * Generic probability matrix containing floating points values.
+ * It is supposed to be inherited by DynamicMatrix and StateTransitionMatrix, which share the
+ * following properties and methods
+ */
+
 using namespace std;
 
 class ProbabilityMatrix {

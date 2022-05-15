@@ -3,6 +3,11 @@
 
 #include "ProbabilityMatrix.h"
 
+/*
+ * the dynamic matrix that is supposed to be dynamically built up by the algorithm
+ * and that is supposed to grow up while new nucleotides are introduced in the sequences (?)
+ */
+
 class DynamicMatrix : public ProbabilityMatrix {
 
 private:

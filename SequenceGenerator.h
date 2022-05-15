@@ -4,6 +4,10 @@
 
 using namespace std;
 
+/* The class that is responsible for defining a random distribution of emission probabilities of
+ * a sequence of nucleotides
+ * */
+
 class SequenceGenerator {
 private:
 

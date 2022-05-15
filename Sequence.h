@@ -1,6 +1,11 @@
 #include "SequenceGenerator.h"
 #include<string>
 
+/*
+ * Sequence of nucleotides, defined casually through a random emission distribution defined by SequenceGenerator
+ * that act as a private attribute in this class, and that is initialized in construction of the sequence entity
+ */
+
 using namespace std;
 
 class Sequence {
