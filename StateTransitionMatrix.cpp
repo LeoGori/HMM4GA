@@ -4,8 +4,6 @@
 #include<bits/stdc++.h>
 
 
-
-
 StateTransitionMatrix::StateTransitionMatrix() {
 
 //    states = {
@@ -23,15 +21,15 @@ StateTransitionMatrix::StateTransitionMatrix() {
 
 }
 
-float StateTransitionMatrix::getTransitionProbability(char char1, char char2) {
+float StateTransitionMatrix::getProbability(char char1, char char2) {
 
-    float probability = transitionMatrix[states[char1]][states[char2]];
+    float probability = matrix[states[char1]][states[char2]];
 
     return probability;
 }
 
 vector<vector<float>> StateTransitionMatrix::getTransitionMatrix() {
-    return transitionMatrix;
+    return matrix;
 }
 
 void StateTransitionMatrix::populateMatrix() {
@@ -57,35 +55,38 @@ void StateTransitionMatrix::populateMatrix() {
         for (int j = 0; j < states.size(); j++) {
             values[j] /= (float) sum;
         }
-        transitionMatrix.push_back(values);
+        matrix.push_back(values);
         values.clear();
     }
 }
 
 /*void StateTransitionMatrix::print(){
-    for(auto & iterator : transitionMatrix)
-        for (int j=0; j < transitionMatrix.size(); j++)
+    for(auto & iterator : matrix)
+        for (int j=0; j < matrix.size(); j++)
             cout << iterator[j] << endl;
 }*/
 
-ostream& operator<<(ostream& out, const StateTransitionMatrix& stm) {
+
+ostream& operator<<(ostream& out, const StateTransitionMatrix& pm) {
+
 
     char state[3] = {'M', 'I', 'D'};
     out << "    |";
-    for (int i = 0; i < stm.states.size(); i++) {
+    for (int i = 0; i < pm.states.size(); i++) {
         out << "   " << state[i] << "   |";
     }
     out << endl;
 
-    for(int i=0; i < stm.states.size(); i++){
+    for(int i=0; i < pm.states.size(); i++){
         out << "|";
         out << " " << state[i] << " |";
-        for(int j=0; j < stm.states.size(); j++){
+        for(int j=0; j < pm.states.size(); j++){
 
-            float value = stm.transitionMatrix[i][j];
+            float value = pm.matrix[i][j];
             out << " " << fixed << setprecision(3) <<  value << " |";
         }
         out << "\n";
     }
     return out;
 }
+

@@ -22,21 +22,20 @@ SequenceGenerator::SequenceGenerator() {
     for(char & i : nucleotide) {
         int value = dist(gen);
 
-        cout << value << " ";
         totalOdds += value;
         odds.insert({i, value});
 
         for(int j=0; j<value; j++)
-            priorDistribution.push_back(i);
+            fakeSequence.push_back(i);
     }
 
     char nuc;
     float num;
     auto denum = static_cast<float>(totalOdds);
 
-    for(int i =0; i<nucleotide.size(); i++){
+    for(char i : nucleotide){
 
-        nuc = nucleotide[i];
+        nuc = i;
 
         num = static_cast<float>(odds.find(nuc)->second);
 
@@ -45,7 +44,8 @@ SequenceGenerator::SequenceGenerator() {
     }
 
     auto rng = default_random_engine {rd()};
-    std::shuffle(std::begin(priorDistribution), std::end(priorDistribution), rng);
+    std::shuffle(std::begin(fakeSequence), std::end(fakeSequence), rng);
+
 }
 
 char SequenceGenerator::getSymbol() {
@@ -56,7 +56,7 @@ char SequenceGenerator::getSymbol() {
 
     int index = dist(gen);
 
-    return priorDistribution[index];
+    return fakeSequence[index];
 }
 
 float SequenceGenerator::getEmissionProbability(char base) {
