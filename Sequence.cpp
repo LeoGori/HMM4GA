@@ -23,7 +23,7 @@ int Sequence::getLength() {
 }
 
 char Sequence::getChar(int pos) {
-    if (pos > 0 && pos < data.length())
+    if (pos >= 0 && pos < data.length())
         return data[pos];
     return 0;
 }
