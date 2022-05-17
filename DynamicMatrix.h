@@ -39,6 +39,8 @@ public:
 
     // output stream operator overloading, for easily reading the dynamic matrix
     friend ostream& operator<<(ostream& out, const DynamicMatrix& stm);
+
+    void setDimension(int nRows, int nColumns);
 };
 
 #endif //HMM4GA_CLION_DYNAMICMATRIX_H

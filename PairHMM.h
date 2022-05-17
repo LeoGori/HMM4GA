@@ -23,6 +23,9 @@ private:
     // deletion matrix M
     DynamicMatrix deletionMatrix;
 
+    int baseQuality;
+
+
 
 public:
     PairHMM();
@@ -30,5 +33,9 @@ public:
     // TODO
     // runs the algorithm described in the reference document
     void run();
+
+    float getPerBaseEmission(char read, char haplotype);
+
+    float getErrorRate();
 };
 

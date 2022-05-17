@@ -4,9 +4,9 @@
 DynamicMatrix::DynamicMatrix(float initValue) {
     initializationValue = initValue;
 
-    vector<float> cell;
+    /*vector<float> cell;
     cell.push_back(0);
-    matrix.push_back(cell);
+    matrix.push_back(cell);*/
 }
 
 // adds a row filled by 0s
@@ -15,7 +15,11 @@ void DynamicMatrix::addRow() {
     vector<float> values;
     values.reserve(matrix.size());
 
-    for(int i=0; i<matrix[0].size(); i++)
+    if(!matrix[0].empty()) {
+        for (int i = 0; i < matrix[0].size(); i++)
+            values.push_back(0);
+    }
+    else
         values.push_back(0);
 
     matrix.push_back(values);
@@ -23,8 +27,15 @@ void DynamicMatrix::addRow() {
 
 // add a column filled by 0s
 void DynamicMatrix::addColumn() {
-    for(int i=0; i<matrix.size(); i++)
-        matrix[i].push_back(0);
+    if(!matrix.empty()) {
+        for (int i = 0; i < matrix.size(); i++)
+            matrix[i].push_back(0);
+    }
+    else {
+        vector<float> values;
+        values.push_back(0);
+        matrix.push_back(values);
+    }
 }
 
 float DynamicMatrix::getInitializationValue() const {
@@ -66,4 +77,16 @@ ostream& operator<<(ostream& out, const DynamicMatrix& dm) {
 
 void DynamicMatrix::setValue(int pos1, int pos2, float value) {
     matrix[pos1][pos2] = value;
+}
+
+void DynamicMatrix::setDimension(int readLength, int haplotypeLength) {
+
+    vector<float> values;
+    for(int i = 0; i<readLength; i++) {
+        for (int j = 0; j < haplotypeLength; j++)
+            values.push_back(0);
+        matrix.push_back(values);
+        values.clear();
+    }
+
 }

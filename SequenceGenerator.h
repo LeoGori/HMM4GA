@@ -42,4 +42,6 @@ public:
 
     // returns the emission probability of the input nucleotide
     float getEmissionProbability(char symbol);
+
+    void setEmissionProbability(map<char, float> emissionDistribution);
 };
