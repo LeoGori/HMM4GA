@@ -20,7 +20,7 @@ private:
     // insetion matrix I
     DynamicMatrix insertionMatrix;
 
-    // deletion matrix M
+    // deletion matrix D
     DynamicMatrix deletionMatrix;
 
     // the base quality score
