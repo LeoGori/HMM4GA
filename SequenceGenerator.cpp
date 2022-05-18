@@ -1,7 +1,9 @@
 #include "SequenceGenerator.h"
 #include <random>
 #include <algorithm>
+#include <iostream>
 
+using namespace std;
 
 SequenceGenerator::SequenceGenerator() {
 
@@ -25,7 +27,7 @@ SequenceGenerator::SequenceGenerator() {
         odds.insert({i, value});
 
         for(int j=0; j<value; j++)
-            fakeSequence.push_back(i);
+            fakeSequence += i;
     }
 
     char nuc;
@@ -58,8 +60,8 @@ char SequenceGenerator::getSymbol() {
     return fakeSequence[index];
 }
 
-float SequenceGenerator::getEmissionProbability(char base) {
+/*float SequenceGenerator::getEmissionProbability(char base) {
 
     return emissionProbability[nucleotides.find(base)->second];
-}
+}*/
 

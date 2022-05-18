@@ -32,7 +32,7 @@ void Sequence::getNext() {
     data += sg.getSymbol();
 }
 
-float Sequence::getEmissionProbability(char nucleotide) {
+/*float Sequence::getEmissionProbability(char nucleotide) {
     return sg.getEmissionProbability(nucleotide);
-}
+}*/
 

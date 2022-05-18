@@ -14,22 +14,16 @@ private:
 
     // the value that is set for initializing the imaginary positioned cells of the matrix
     // it "corresponds to starting at an imaginary position one base before the read start in a deletion state"
-    float initializationValue;
+    //float initializationValue;
 public:
 
-    explicit DynamicMatrix(float initValue);
+    //explicit DynamicMatrix(float initValue);
 
-    // returns the initializationValue
-    float getInitializationValue() const;
-
-    // sets the initializationValue
-    void setInitializationValue(float initializationValue);
-
-    // adds a 0-filled row to the matrix
+/*    // adds a 0-filled row to the matrix
     void addRow();
 
     // adds a 0-filled column to the matrix
-    void addColumn();
+    void addColumn();*/
 
     // set a value in position (pos1 - pos2) of the matrix
     void setValue(int pos1, int pos2, float value);

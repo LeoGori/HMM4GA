@@ -34,5 +34,5 @@ public:
     void getNext();
 
     // returns the emission probability of the input nucleotide
-    float getEmissionProbability(char nucleotide);
+    //float getEmissionProbability(char nucleotide);
 };

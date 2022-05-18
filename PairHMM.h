@@ -23,6 +23,7 @@ private:
     // deletion matrix M
     DynamicMatrix deletionMatrix;
 
+    // the base quality score
     int baseQuality;
 
 
@@ -30,12 +31,13 @@ private:
 public:
     PairHMM();
 
-    // TODO
     // runs the algorithm described in the reference document
     void run();
 
-    float getPerBaseEmission(char read, char haplotype);
+    // returns the emission probability, based on the base quality score and if the characters match or not
+    float getPerBaseEmission(char readChar, char haplotypeChar) const;
 
-    float getErrorRate();
+    // returns the errorRate function, according to the value of the base quality score
+    float getErrorRate() const;
 };
 

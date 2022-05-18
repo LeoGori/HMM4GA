@@ -25,7 +25,7 @@ private:
 
     // the actual simulated sequence, it is used in order to casually retrieve the nucleotide for the casual generation
     // it is used for the implementation of the method getNext() of class Sequence
-    vector<char> fakeSequence;
+    string fakeSequence;
 
     // the actual emission distribution
     vector<float> emissionProbability;
@@ -41,7 +41,7 @@ public:
     char getSymbol();
 
     // returns the emission probability of the input nucleotide
-    float getEmissionProbability(char symbol);
+    //float getEmissionProbability(char symbol);
 
-    void setEmissionProbability(map<char, float> emissionDistribution);
+    //void setEmissionProbability(map<char, float> emissionDistribution);
 };

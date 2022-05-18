@@ -1,15 +1,7 @@
 #include "DynamicMatrix.h"
 #include<bits/stdc++.h>
 
-DynamicMatrix::DynamicMatrix(float initValue) {
-    initializationValue = initValue;
-
-    /*vector<float> cell;
-    cell.push_back(0);
-    matrix.push_back(cell);*/
-}
-
-// adds a row filled by 0s
+/*// adds a row filled by 0s
 void DynamicMatrix::addRow() {
 
     vector<float> values;
@@ -36,39 +28,32 @@ void DynamicMatrix::addColumn() {
         values.push_back(0);
         matrix.push_back(values);
     }
-}
-
-float DynamicMatrix::getInitializationValue() const {
-    return initializationValue;
-}
-
-void DynamicMatrix::setInitializationValue(float initValue) {
-    initializationValue = initValue;
-}
+}*/
 
 float DynamicMatrix::getValue(int pos1, int pos2) {
 
-    if(pos1 > 0 && pos2 > 0)
-        return this->getProbability(pos1, pos2);
-    else
-        return initializationValue;
+    return this->getProbability(pos1 + 1, pos2 + 1);
 }
 
 
 ostream& operator<<(ostream& out, const DynamicMatrix& dm) {
 
-    out << "    |";
+    out << "      |";
     for (int i = 0; i < dm.matrix[0].size(); i++) {
-        out << "   " << i << "   |";
+        if(i>0)
+            out<< " ";
+        out << "     " << i-1 << "       |";
     }
     out << endl;
 
     for(int i=0; i < dm.matrix.size(); i++){
         out << "|";
-        out << " " << i << " |";
+        if(i>0)
+            out<< " ";
+        out << " " << i-1 << "  |";
         for(float value : dm.matrix[i]){
 
-            out << " " << fixed << setprecision(3) <<  value << " |";
+            out << " " << fixed << setprecision(10) <<  value << " |";
         }
         out << "\n";
     }
@@ -76,14 +61,14 @@ ostream& operator<<(ostream& out, const DynamicMatrix& dm) {
 }
 
 void DynamicMatrix::setValue(int pos1, int pos2, float value) {
-    matrix[pos1][pos2] = value;
+    matrix[pos1 + 1][pos2 + 1] = value;
 }
 
 void DynamicMatrix::setDimension(int readLength, int haplotypeLength) {
 
     vector<float> values;
-    for(int i = 0; i<readLength; i++) {
-        for (int j = 0; j < haplotypeLength; j++)
+    for(int i = 0; i<readLength + 1; i++) {
+        for (int j = 0; j < haplotypeLength + 1; j++)
             values.push_back(0);
         matrix.push_back(values);
         values.clear();
