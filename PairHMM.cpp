@@ -121,7 +121,7 @@ void PairHMM::run() {
             insertionMatrix.getValue(read.getLength()-1, j);
 
 
-    cout << "the probability P(R|H) of read R (" << read.getSequence() <<")to be sequenced from haplotype H (" << haplotype.getSequence() << ") is: " << result << endl;
+    cout << "the probability P(R|H) of read R (" << read.getSequence() <<") to be sequenced from haplotype H (" << haplotype.getSequence() << ") is: " << result << endl;
 
 }
 
