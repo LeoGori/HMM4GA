@@ -39,7 +39,7 @@ public:
     // possible improvement: assign defined transition probabilities, as the method describe in "references/2017_fpga_pairhmm.pdf" (?)
     void populateMatrix();
 
-    // output stream operator overloading, for easily reading the transition matrix
+    // output stream operator overloading, for printing an easily readable representation of the transition matrix
     friend ostream& operator<<(ostream& out, const StateTransitionMatrix& stm);
 
 };
