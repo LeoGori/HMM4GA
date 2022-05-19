@@ -42,8 +42,6 @@ public:
     // output stream operator overloading, for easily reading the transition matrix
     friend ostream& operator<<(ostream& out, const StateTransitionMatrix& stm);
 
-//    void print();
-
 };
 
 #endif //HMM4GA_CLION_STATETRANSITIONMATRIX_H
