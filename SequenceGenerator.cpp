@@ -18,7 +18,7 @@ SequenceGenerator::SequenceGenerator() {
     totalOdds = 0;
     random_device rd;   // non-deterministic generator
     mt19937 gen(rd());  // to seed mersenne twister.
-    uniform_int_distribution<int> dist(1,100); // distribute results between 1 and 1000 inclusive.
+    uniform_int_distribution<int> dist(1,100); // distribute results between 1 and 100 inclusive.
 
     for(char & i : nucleotide) {
         int value = dist(gen);
@@ -53,7 +53,7 @@ char SequenceGenerator::getSymbol() {
 
     random_device rd;   // non-deterministic generator
     mt19937 gen(rd());  // to seed mersenne twister.
-    uniform_int_distribution<int> dist(0,totalOdds - 1); // distribute results between 1 and 1000 inclusive.
+    uniform_int_distribution<int> dist(0,totalOdds - 1); // distribute results between 1 and the number of (totalOdds - 1) inclusive.
 
     int index = dist(gen);
 
