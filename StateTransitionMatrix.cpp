@@ -6,13 +6,6 @@
 
 StateTransitionMatrix::StateTransitionMatrix() {
 
-//    states = {
-//            { 'A', 0 },
-//            { 'C', 1 },
-//            { 'G', 2 },
-//            { 'T', 3 },
-//    };
-
     states = {
             { 'M', 0 },
             { 'I', 1 },
@@ -59,12 +52,6 @@ void StateTransitionMatrix::populateMatrix() {
         values.clear();
     }
 }
-
-/*void StateTransitionMatrix::print(){
-    for(auto & iterator : matrix)
-        for (int j=0; j < matrix.size(); j++)
-            cout << iterator[j] << endl;
-}*/
 
 
 ostream& operator<<(ostream& out, const StateTransitionMatrix& pm) {
