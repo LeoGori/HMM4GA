@@ -20,10 +20,12 @@ private:
     // insetion matrix I
     DynamicMatrix insertionMatrix;
 
-    // deletion matrix D
+    // deletion matrix M
     DynamicMatrix deletionMatrix;
 
     // the base quality score
+    // possible improvement: the quality may be an attribute of the class Sequence (in particular of the read)
+    // and should be different for each base and its position in the sequence (?)
     int baseQuality;
 
 

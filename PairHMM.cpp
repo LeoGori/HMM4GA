@@ -5,6 +5,7 @@
 
 using namespace std;
 
+
 PairHMM::PairHMM() {
 
     omp_set_num_threads(8);
@@ -13,34 +14,40 @@ PairHMM::PairHMM() {
 
     transitionMatrix.populateMatrix();
 
-    for(int i=0;i<10; i++)
+    for(int i=0;i<5; i++)
         haplotype.getNext();
 
-    for(int i=0;i<8; i++)
+    for(int i=0;i<3; i++)
         read.getNext();
 
     // set the dimension of M, I and D matrices to (n x m), where n is the length of the read, and m is the length of the haplotype
+    // all the matrices are completely 0-filled in this step
     matchMatrix.setDimension(read.getLength(), haplotype.getLength());
 
     insertionMatrix.setDimension(read.getLength(), haplotype.getLength());
 
     deletionMatrix.setDimension(read.getLength(), haplotype.getLength());
 
-    /* The initialization according to the reference document, but it does not initialize all the required starting values (?)
-    for(int i=0; i< haplotype.getLength(); i++) {
-        matchMatrix.setValue(-1, i, 0);
-        insertionMatrix.setValue(-1, i, 0);
-    }*/
 
-    // set the value of the element in position (-1,-1) of matrix M to 1
-    // the other inizialization steps, described in "Biological Sequence Analysis: Probabilistic Models of Proteins and Nucleic Acids"
-    // at page 88 (chapter 4.2), are already done, since the matrices M, I and D are completely 0-filled by inizialization
+    // following convention described in "references/PHMMFA_Ren_Bertels_Al-Ars.pdf"
+    // the other inizialization values in the matrix
+    // are already initialized, since the matrices M, I and D are completely 0-filled by inizialization
+    float value = (float) 1 / (float) haplotype.getLength();
+
+
+    for(int i=0; i< haplotype.getLength(); i++) {
+        deletionMatrix.setValue(-1, i, value);
+    }
+
+    // following convention described in "Biological Sequence Analysis: Probabilistic Models of Proteins and Nucleic Acids", page 88 (chapter 4.2),
+    /*// set the value of the element in position (-1,-1) of matrix M to 1, while the other inizialization values in the matrix
+    // are already initialized, since the matrices M, I and D are completely 0-filled by inizialization
     for(int i=0; i< haplotype.getLength(); i++) {
 
         matchMatrix.setValue(-1, -1, 1);
-    }
+    }*/
 
-    cout << transitionMatrix << endl;
+    cout << "The state transition matrix is:\n" << transitionMatrix << endl;
 
 }
 
@@ -49,8 +56,8 @@ void PairHMM::run() {
     float prior;
     float value;
 
-    read.printSequence();
-    haplotype.printSequence();
+    cout << "The haplotype is: " << haplotype.getSequence() << endl;
+    cout << "The read is: " + read.getSequence() << endl;
 
     for(int i = 0; i < read.getLength(); i++) {
 
@@ -61,8 +68,6 @@ void PairHMM::run() {
 
                 // define the prior probability, based on the value of the base quality score
                 prior = getPerBaseEmission(read.getChar(i), haplotype.getChar(j));
-
-                cout << prior << endl;
 
                 // compute the value of the element (i, j) of the matrix M
                 value = prior *
@@ -88,7 +93,7 @@ void PairHMM::run() {
                 deletionMatrix.setValue(i, j, value);
 
                 int ID = omp_get_thread_num();
-                cout << "Lettera " << read.getChar(i) << " e "<< haplotype.getChar(j) << ", Thread ID: " << ID << " relativa al ciclo numero " << i << endl;
+                cout << "Analyzing chars " << read.getChar(i) << " and "<< haplotype.getChar(j) << ", executed by ThreadID: " << ID << ", during cycle i=" << i << ", j=" << j << endl;
 
                 cout << "Matrice M\n\n" << matchMatrix << endl;
 
@@ -102,12 +107,21 @@ void PairHMM::run() {
 
     }
 
-    // result of the algorithm
-    float result = matchMatrix.getValue(read.getLength()-1, haplotype.getLength()-1) +
-            insertionMatrix.getValue(read.getLength()-1, haplotype.getLength()-1);
+    // result of the algorithm according to the book:
+    // “Biological Sequence Analysis: Probabilistic Models of Proteins and Nucleic Acids”, page 88, chapter 4.2
+    /*float result = matchMatrix.getValue(read.getLength()-1, haplotype.getLength()-1) +
+                   insertionMatrix.getValue(read.getLength()-1, haplotype.getLength()-1);*/
 
-    cout << "the probability P(R|H) of read R to be sequenced from haplotype H is: " << result << endl;
 
+    // result took according to both the reference documents
+    float result = 0;
+
+    for(int j=0;j<haplotype.getLength(); j++)
+        result += matchMatrix.getValue(read.getLength()-1, j) +
+            insertionMatrix.getValue(read.getLength()-1, j);
+
+
+    cout << "the probability P(R|H) of read R (" << read.getSequence() <<")to be sequenced from haplotype H (" << haplotype.getSequence() << ") is: " << result << endl;
 
 }
 
@@ -125,8 +139,6 @@ float PairHMM::getErrorRate() const {
     float ratio = (float) baseQuality / 10;
 
     auto errorRate = (float) pow(0.1, ratio);
-
-    cout << "errorRate: " << errorRate << endl;
 
     return errorRate;
 }

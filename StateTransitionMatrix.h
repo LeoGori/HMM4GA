@@ -36,6 +36,7 @@ public:
 
     // fills the matrix with random probability values, making sure that transition probabilities
     // from the same states sum up to 1
+    // possible improvement: assign defined transition probabilities, as the method describe in "references/2017_fpga_pairhmm.pdf" (?)
     void populateMatrix();
 
     // output stream operator overloading, for easily reading the transition matrix

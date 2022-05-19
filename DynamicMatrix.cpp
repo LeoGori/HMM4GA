@@ -2,6 +2,12 @@
 #include<bits/stdc++.h>
 
 /*// adds a row filled by 0s
+ * this method can be useful in the case a read sequence is generated at runtime, inside the execution of the
+ * hmm pair forward algorithm, for instance in the case a new characters of the read needs to be generated inside the
+ * for loop of the algorithm.
+ * In such a case, a new row needs to be added to the M, I and D matrices.
+ * In the current implementation we consider the haplotype and read sequences already defined before the execution of the algorithm
+ * * For this reason this method has been commented
 void DynamicMatrix::addRow() {
 
     vector<float> values;
@@ -18,6 +24,12 @@ void DynamicMatrix::addRow() {
 }
 
 // add a column filled by 0s
+  * this method can be useful in the case a haplotype sequence is generated at runtime, inside the execution of the
+ * hmm pair forward algorithm, for instance in the case a new character of the haplotype needs to be generated inside the
+ * for loop of the algorithm.
+ * In such a case, a new column needs to be added to the M, I and D matrices.
+ * In the current implementation we consider the haplotype and read sequences already defined before the execution of the algorithm
+ * For this reason this method has been commented
 void DynamicMatrix::addColumn() {
     if(!matrix.empty()) {
         for (int i = 0; i < matrix.size(); i++)
@@ -30,6 +42,12 @@ void DynamicMatrix::addColumn() {
     }
 }*/
 
+
+// returns the i+1, j+1 value of the matrix, hiding the user the fact that elements:
+// - [0,0];
+// - [0,j] for 1 <= j < length of the haplotype sequence;
+// - [i,0] for 1 <= i < length of the read sequence
+// are all reserved for initialization purposes, and do not logically belong to the matrix
 float DynamicMatrix::getValue(int pos1, int pos2) {
 
     return this->getProbability(pos1 + 1, pos2 + 1);
@@ -60,10 +78,22 @@ ostream& operator<<(ostream& out, const DynamicMatrix& dm) {
     return out;
 }
 
+
+// sets the i+1, j+1 value of the matrix, hiding the user the fact that elements:
+// - [0,0];
+// - [0,j] for 1 <= j < length of the haplotype sequence;
+// - [i,0] for 1 <= i < length of the read sequence
+// are all reserved for initialization purposes, and do not logically belong to the matrix
 void DynamicMatrix::setValue(int pos1, int pos2, float value) {
     matrix[pos1 + 1][pos2 + 1] = value;
 }
 
+/*
+ * Sets the dimension of the matrix such that:
+ * - number of rows = length of the read + 1;
+ * - number of columns = length of the haplotype + 1
+ * the additional column and row are reserved for initialization purposes
+ */
 void DynamicMatrix::setDimension(int readLength, int haplotypeLength) {
 
     vector<float> values;

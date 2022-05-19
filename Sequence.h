@@ -33,6 +33,9 @@ public:
     // the emission probability is defined randomly by SequenceGenerator
     void getNext();
 
+    // returns the whole sequence
+    string getSequence();
+
     // returns the emission probability of the input nucleotide
     //float getEmissionProbability(char nucleotide);
 };
