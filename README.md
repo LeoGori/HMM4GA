@@ -6,7 +6,7 @@ computation through the use of [**OpenMP**](https://www.openmp.org/) APIs.
 Further details are provided in these articles ([**[1]**](https://github.com/LeoGori/HMM4GA/blob/main/references/PHMMFA_Ren_Bertels_Al-Ars.pdf), [**[2]**](https://github.com/LeoGori/HMM4GA/blob/main/references/2017_fpga_pairhmm.pdf)) and on the book **Biological Sequence Analysis: Probabilistic Models of Proteins and Nucleic Acids** (page 88, §4.2).
 
 # Code Description
-The files that build up the project are:
+The main files that build up the project are:
 
 - [**_Sequence.h_**](https://github.com/LeoGori/HMM4GA/blob/main/Sequence.h): class that represents the sequence of nucleotides, it contains the string of characters that compose the sequence and the class SequenceGenerator
 - [**_SequenceGenerator.h_**](https://github.com/LeoGori/HMM4GA/blob/main/SequenceGenerator.h): class that defines a random emission probability distribution of a sequence of nucleotides. Currently, an instantiation of the class Sequence is randomly generated according to its SequenceGenerator.
