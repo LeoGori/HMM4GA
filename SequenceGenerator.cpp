@@ -1,7 +1,6 @@
 #include "SequenceGenerator.h"
 #include <random>
 #include <algorithm>
-#include <iostream>
 
 using namespace std;
 
@@ -53,7 +52,7 @@ char SequenceGenerator::getSymbol() {
 
     random_device rd;   // non-deterministic generator
     mt19937 gen(rd());  // to seed mersenne twister.
-    uniform_int_distribution<int> dist(0,totalOdds - 1); // distribute results between 1 and the number of (totalOdds - 1) inclusive.
+    uniform_int_distribution<int> dist(0,totalOdds - 1); // distribute results between 1 and (total odds - 1) inclusive.
 
     int index = dist(gen);
 

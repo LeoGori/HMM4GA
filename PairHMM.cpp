@@ -1,6 +1,6 @@
 #include "PairHMM.h"
 #include "omp.h"
-#include<iostream>
+#include <iostream>
 #include <cmath>
 
 using namespace std;
@@ -47,7 +47,8 @@ PairHMM::PairHMM() {
         matchMatrix.setValue(-1, -1, 1);
     }*/
 
-    cout << "The state transition matrix is:\n" << transitionMatrix << endl;
+    cout << " The state transition matrix is:\n" << transitionMatrix << endl;
+    cout << "###########################################################################################################################################################" << endl;
 
 }
 
@@ -58,6 +59,8 @@ void PairHMM::run() {
 
     cout << "The haplotype is: " << haplotype.getSequence() << endl;
     cout << "The read is: " + read.getSequence() << endl;
+
+    cout << "###########################################################################################################################################################" << endl;
 
     for(int i = 0; i < read.getLength(); i++) {
 
@@ -100,6 +103,8 @@ void PairHMM::run() {
                 cout << "Matrice I\n\n" << insertionMatrix << endl;
 
                 cout << "Matrice D\n\n" << deletionMatrix << endl;
+
+                cout << "###########################################################################################################################################################" << endl;
 
 
             }
