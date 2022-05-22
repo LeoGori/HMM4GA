@@ -15,7 +15,7 @@ The main files that build up the project are:
 - [**_main.cpp_**](https://github.com/LeoGori/HMM4GA/blob/main/main.cpp): the entry point of the program, contains an instantiation of the class **PairHMM** and the call of its method for the execution of the PairHMM forwarding algorithm
 
 # Language and APIs
-The code is entirely written in C++ programming language, with the use of the following libraries and APIs:
+The code is entirely written in C++ programming language, with the use of the following libraries and APIs (omitting the standard ones):
 
 - [**_random_**](https://www.cplusplus.com/reference/random/): used for the random generation of sequences and the random definition of state transition probabilities
 - [**_algorithm_**](https://www.cplusplus.com/reference/algorithm/): used for the shuflling of sequences, used for randomization purposes
