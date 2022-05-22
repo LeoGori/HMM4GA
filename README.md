@@ -1,6 +1,6 @@
 # Hidden Markov Models for Genome Analysis
-The project aims to the development of the implementation of the **pair hidden Markov Model (HMM) forward algorithm** for genomic sequence analysis (described in the
-[**reference document**](https://github.com/LeoGori/HMM4GA/blob/main/references/PHMMFA_Benjamin.pdf)), while introducing parallel
+The project's goal is the development of a basic implementation of the **pair hidden Markov Model (HMM) forward algorithm** for genomic sequence analysis (described in the
+[**reference document**](https://github.com/LeoGori/HMM4GA/blob/main/references/PHMMFA_Benjamin.pdf)), whith the introduction of parallel
 computation through the use of [**OpenMP**](https://www.openmp.org/) APIs.
 
 Further details are provided in these articles ([**[1]**](https://github.com/LeoGori/HMM4GA/blob/main/references/PHMMFA_Ren_Bertels_Al-Ars.pdf), [**[2]**](https://github.com/LeoGori/HMM4GA/blob/main/references/2017_fpga_pairhmm.pdf)) and on the book **Biological Sequence Analysis: Probabilistic Models of Proteins and Nucleic Acids** (page 88, §4.2).
