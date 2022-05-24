@@ -20,3 +20,25 @@ The code is entirely written in C++ programming language, with the use of the fo
 - [**_random_**](https://www.cplusplus.com/reference/random/): used for the random generation of sequences and the random definition of state transition probabilities
 - [**_algorithm_**](https://www.cplusplus.com/reference/algorithm/): used for the shuflling of sequences, used for randomization purposes
 - [**_OpenMP_**](https://www.openmp.org/): used in [**_PairHMM.cpp_**](https://github.com/LeoGori/HMM4GA/blob/main/PairHMM.cpp) for introducing thread level computation in the algorithm
+
+# How to run the code (Windows)
+
+1. Install [MinGW-w64](https://www.mingw-w64.org/downloads/)
+2. Install [CMake](https://cmake.org/download/)
+3. Create folder for building project
+```
+  mkdir build
+  cd build
+```
+4.Generate the makefiles
+```
+  cmake -G “MinGW Makefiles”
+```
+5. build the project
+```
+  cmake --build
+```
+6. run the program
+```
+  ./HMM4GA.exe
+```
