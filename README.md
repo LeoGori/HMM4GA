@@ -24,7 +24,7 @@ The code is entirely written in C++ programming language, with the use of the fo
 
 # How to run the code (Windows)
 
-1. Install [MinGw64](https://winlibs.com/) version > 9.2 (otherwise the execution will return the same sequence, as reported [here](https://stackoverflow.com/questions/18880654/why-do-i-get-the-same-sequence-for-every-run-with-stdrandom-device-with-mingw) and [here](https://en.cppreference.com/w/cpp/numeric/random/random_device)
+1. Install [MinGw64](https://winlibs.com/) version > 9.2 (otherwise the random generated sequence will be the same at each execution, as reported [here](https://stackoverflow.com/questions/18880654/why-do-i-get-the-same-sequence-for-every-run-with-stdrandom-device-with-mingw) and [here](https://en.cppreference.com/w/cpp/numeric/random/random_device))
 2. Install [CMake](https://cmake.org/download/)
 3. Create folder for building project
 ```
