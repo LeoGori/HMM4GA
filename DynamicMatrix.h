@@ -12,12 +12,7 @@ class DynamicMatrix : public ProbabilityMatrix {
 
 private:
 
-    // the value that is set for initializing the imaginary positioned cells of the matrix
-    // it "corresponds to starting at an imaginary position one base before the read start in a deletion state"
-    //float initializationValue;
 public:
-
-    //explicit DynamicMatrix(float initValue);
 
 /*    // adds a 0-filled row to the matrix
     void addRow();
