@@ -32,11 +32,11 @@ The code is entirely written in C++ programming language, with the use of the fo
 ```
 4.Generate the makefiles
 ```
-  cmake -G “MinGW Makefiles”
+  cmake -G “MinGW Makefiles” ..
 ```
 5. build the project
 ```
-  cmake --build
+  cmake --build .
 ```
 6. run the program
 ```
