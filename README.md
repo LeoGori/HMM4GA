@@ -21,9 +21,10 @@ The code is entirely written in C++ programming language, with the use of the fo
 - [**_algorithm_**](https://www.cplusplus.com/reference/algorithm/): used for the shuflling of sequences, used for randomization purposes
 - [**_OpenMP_**](https://www.openmp.org/): used in [**_PairHMM.cpp_**](https://github.com/LeoGori/HMM4GA/blob/main/PairHMM.cpp) for introducing thread level computation in the algorithm
 
+
 # How to run the code (Windows)
 
-1. Install [MinGW-w64](https://www.mingw-w64.org/downloads/)
+1. Install [MinGw64](https://winlibs.com/) version > 9.2 (otherwise the random generated sequence will be the same at each execution, as reported [here](https://stackoverflow.com/questions/18880654/why-do-i-get-the-same-sequence-for-every-run-with-stdrandom-device-with-mingw) and [here](https://en.cppreference.com/w/cpp/numeric/random/random_device))
 2. Install [CMake](https://cmake.org/download/)
 3. Create folder for building project
 ```
