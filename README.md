@@ -21,6 +21,7 @@ The code is entirely written in C++ programming language, with the use of the fo
 - [**_algorithm_**](https://www.cplusplus.com/reference/algorithm/): used for the shuflling of sequences, used for randomization purposes
 - [**_OpenMP_**](https://www.openmp.org/): used in [**_PairHMM.cpp_**](https://github.com/LeoGori/HMM4GA/blob/main/PairHMM.cpp) for introducing thread level computation in the algorithm
 
+<!--
 # How to run the code (Windows)
 
 1. Install [MinGW-w64](https://www.mingw-w64.org/downloads/)
@@ -42,3 +43,4 @@ The code is entirely written in C++ programming language, with the use of the fo
 ```
   ./HMM4GA.exe
 ```
+-->
