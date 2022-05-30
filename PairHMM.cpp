@@ -32,9 +32,20 @@ PairHMM::PairHMM() {
     // following convention described in "references/PHMMFA_Ren_Bertels_Al-Ars.pdf"
     // the other inizialization values in the matrix
     // are already initialized, since the matrices M, I and D are completely 0-filled by inizialization
+
+
+
+    for(int i=0; i< read.getLength(); i++) {
+        deletionMatrix.setValue(i, -1, 0);
+        matchMatrix.setValue(i, -1, 0);
+        insertionMatrix.setValue(i, -1, 0);
+    }
+
     float value = (float) 1 / (float) haplotype.getLength();
-    for(int i=0; i< haplotype.getLength(); i++) {
-        deletionMatrix.setValue(-1, i, value);
+    for(int j=-1; j< haplotype.getLength(); j++) {
+        deletionMatrix.setValue(-1, j, value);
+        matchMatrix.setValue(-1, j, 0);
+        insertionMatrix.setValue(-1, j, 0);
     }
 
     // following convention described in "Biological Sequence Analysis: Probabilistic Models of Proteins and Nucleic Acids", page 88 (chapter 4.2),
@@ -52,10 +63,22 @@ PairHMM::PairHMM() {
 
 void PairHMM::run() {
 
+    cout << "Matrice M\n\n" << matchMatrix << endl;
+
+    cout << "Matrice I\n\n" << insertionMatrix << endl;
+
+    cout << "Matrice D\n\n" << deletionMatrix << endl;
+
+    cout
+            << "###########################################################################################################################################################"
+            << endl;
+
     cout << "The haplotype is: " << haplotype.getSequence() << endl;
     cout << "The read is: " + read.getSequence() << endl;
 
-    cout << "###########################################################################################################################################################" << endl;
+    cout
+            << "###########################################################################################################################################################"
+            << endl;
 
 
     // I commented this implementation because the access to the elements of the matrix is made row by row
@@ -117,7 +140,7 @@ void PairHMM::run() {
     // therefore, actually the optimal computation is not performed.
     // waiting to understand better how to exploit OpenMP in order to execute the access to the cells of the matrix
     // along the anti-diagonal without losing for cycles for checking the validity of the indexes
-    int j;
+    /*int j;
 
     for(int k = 0; k < haplotype.getLength() + read.getLength()-1; k++) {
 #pragma omp parallel for default(none) shared(haplotype, k, cout) private(j)
@@ -130,48 +153,24 @@ void PairHMM::run() {
                 }
             }
         }
-    }
+    }*/
+
+    firstLoop();
+
+
+    cout << "finito primo loop" << endl;
+//#pragma omp barrier
+
+    secondLoop();
+
+//#pragma omp barrier
+
+    thirdLoop();
 
     // was not able to split the access in two for loops because cannot find a way to
     // close the parallel section and reopen it in the next for loop
 
-/*    int j;
 
-    for(int k = 0; k < haplotype.getLength() + read.getLength()-1; k++) {
-#pragma omp parallel for default(none) shared(haplotype, k, cout) private(j)
-        for (int i=k; i>=0; i--) {
-            j = k - i;
-            if (i < read.getLength() && j<haplotype.getLength()) {
-#pragma omp critical
-                {
-                    execMatricesComputation(i, j);
-                }
-            }
-        }
-    }
-
-    int i;
-
-    cout << "finito primo loop" << endl;
-
-    for(int k = 1; k < haplotype.getLength(); k++) {
-        i = read.getLength() - 1;
-#pragma omp parallel for default(none) shared(haplotype, read, k, cout) private(i, j)
-        for (j = k; j < haplotype.getLength(); j++) {
-
-#pragma omp critical
-            if (i >= 0) {
-                {
-
-                    cout << i << ", " << j << ", " << k << endl;
-                    execMatricesComputation(i, j);
-                    i--;
-                }
-            }
-
-        }
-
-    }*/
 
     // result of the algorithm according to the book:
     // “Biological Sequence Analysis: Probabilistic Models of Proteins and Nucleic Acids”, page 88, chapter 4.2
@@ -182,17 +181,53 @@ void PairHMM::run() {
     // result took according to both the reference documents
     float result = 0;
 
-    for(j=0;j<haplotype.getLength(); j++)
-        result += matchMatrix.getValue(read.getLength()-1, j) +
-            insertionMatrix.getValue(read.getLength()-1, j);
+    for (int j = 0; j < haplotype.getLength(); j++)
+        result += matchMatrix.getValue(read.getLength() - 1, j) +
+                  insertionMatrix.getValue(read.getLength() - 1, j);
 
 
-    cout << "the probability P(R|H) of read R (" << read.getSequence() <<") to be sequenced from haplotype H (" << haplotype.getSequence() << ") is: " << result << endl;
+    cout << "the probability P(R|H) of read R (" << read.getSequence() << ") to be sequenced from haplotype H ("
+         << haplotype.getSequence() << ") is: " << result << endl;
 
 }
 
 
+void PairHMM:: firstLoop() {
 
+    for (int k = 0; k < read.getLength(); k++) {
+
+#pragma omp parallel for default(none) shared(k)
+        for (int i = k; i >= 0; i--) {
+            execMatricesComputation(i, k - i);
+        }
+
+    }
+}
+
+void PairHMM:: secondLoop() {
+
+    for (int k = 1; k < haplotype.getLength() - read.getLength(); k++) {
+        cout << "inizio ciclo" << endl;
+#pragma omp parallel for default(none) shared(k, cout, read)
+        for (int i = read.getLength() - 1; i >= 0; i--) {
+            execMatricesComputation(i, k + read.getLength() - i - 1);
+        }
+        cout << "fine ciclo" << endl;
+    }
+
+}
+
+void PairHMM::thirdLoop() {
+
+    for (int k = haplotype.getLength() - read.getLength(); k<haplotype.getLength(); k++) {
+
+#pragma omp parallel for default(none) shared(haplotype, read, cout, k)
+        for (int j = k; j < haplotype.getLength(); j++) {
+            execMatricesComputation( read.getLength() - (j - k) -1 , j);
+        }
+
+    }
+}
 
 float PairHMM::getPerBaseEmission(char readChar, char haplotypeChar) const {
     float errorRate = getErrorRate();
@@ -223,10 +258,6 @@ void PairHMM::execMatricesComputation(int i, int j) {
              insertionMatrix.getValue(i - 1, j - 1) * transitionMatrix.getProbability('I', 'M') +
              deletionMatrix.getValue(i - 1, j - 1) * transitionMatrix.getProbability('D', 'M'));
 
-    cout << "the value is " << prior << " * (" << matchMatrix.getValue(i - 1, j - 1) << " * " <<  transitionMatrix.getProbability('M', 'M') << " + " <<
-                               insertionMatrix.getValue(i - 1, j - 1) << " * " << transitionMatrix.getProbability('I', 'M') << " + " <<
-                               deletionMatrix.getValue(i - 1, j - 1) << " * " << transitionMatrix.getProbability('D', 'M') << ") = " << value << endl;
-
     // assign the value to the element (i, j) of the matrix M
     matchMatrix.setValue(i, j, value);
 
@@ -245,19 +276,36 @@ void PairHMM::execMatricesComputation(int i, int j) {
     deletionMatrix.setValue(i, j, value);
 
     int ID = omp_get_thread_num();
-    cout << "Analyzing chars " << read.getChar(i) << " and " << haplotype.getChar(j)
-         << ", executed by ThreadID: " << ID << ", during cycle i=" << i << ", j=" << j << endl;
 
-    cout << "Matrice M\n\n" << matchMatrix << endl;
+    value = prior *
+            (matchMatrix.getValue(i - 1, j - 1) * transitionMatrix.getProbability('M', 'M') +
+             insertionMatrix.getValue(i - 1, j - 1) * transitionMatrix.getProbability('I', 'M') +
+             deletionMatrix.getValue(i - 1, j - 1) * transitionMatrix.getProbability('D', 'M'));
 
-    cout << "Matrice I\n\n" << insertionMatrix << endl;
+#pragma omp critical
+    {
 
-    cout << "Matrice D\n\n" << deletionMatrix << endl;
+        cout << "the value is " << prior << " * (" << matchMatrix.getValue(i - 1, j - 1) << " * "
+             << transitionMatrix.getProbability('M', 'M') << " + " <<
+             insertionMatrix.getValue(i - 1, j - 1) << " * " << transitionMatrix.getProbability('I', 'M') << " + " <<
+             deletionMatrix.getValue(i - 1, j - 1) << " * " << transitionMatrix.getProbability('D', 'M') << ") = "
+             << value << endl;
 
-    cout
-            << "###########################################################################################################################################################"
-            << endl;
+        cout << "Analyzing chars " << read.getChar(i) << " and " << haplotype.getChar(j)
+             << ", executed by ThreadID: " << ID << ", during cycle i=" << i << ", j=" << j << endl;
+
+        cout << "Matrice M\n\n" << matchMatrix << endl;
+
+        cout << "Matrice I\n\n" << insertionMatrix << endl;
+
+        cout << "Matrice D\n\n" << deletionMatrix << endl;
+
+        cout
+                << "###########################################################################################################################################################"
+                << endl;
+    }
 }
+
 
 
 

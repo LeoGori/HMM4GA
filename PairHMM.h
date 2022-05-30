@@ -45,5 +45,11 @@ public:
     //private procedure for the computation of the matrices
 private:
     void execMatricesComputation(int posX, int posY);
+
+    void firstLoop();
+
+    void secondLoop();
+
+    void thirdLoop();
 };
 
