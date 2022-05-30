@@ -81,95 +81,66 @@ void PairHMM::run() {
             << endl;
 
 
-    // I commented this implementation because the access to the elements of the matrix is made row by row
-    // while in order to exploit parallel execution we need to access elements along anti-diagonal lines
-/*    for(int i = 0; i < read.getLength(); i++) {
 
-#pragma omp parallel for default(none) shared(haplotype, i, cout) private(prior, value)
-        for (int j = 0; j < haplotype.getLength(); j++) {
-#pragma omp critical
-            {
+/* access to the upper left triangle of the matrix
+ * A = accessed
+ * N = Not accessed
+ *
+ * Example with matrix M(3x5)
+ *
+ * | A | A | A | N | N |
+ * | A | A | N | N | N |
+ * | A | N | N | N | N |
+ *
+ */
+    for (int k = 0; k < read.getLength(); k++) {
 
-                // define the prior probability, based on the value of the base quality score
-                prior = getPerBaseEmission(read.getChar(i), haplotype.getChar(j));
-
-                // compute the value of the element (i, j) of the matrix M
-                value = prior *
-                              (matchMatrix.getValue(i-1, j-1) * transitionMatrix.getProbability('M', 'M') +
-                               insertionMatrix.getValue(i-1, j-1) * transitionMatrix.getProbability('I', 'M') +
-                               deletionMatrix.getValue(i-1, j-1) * transitionMatrix.getProbability('D', 'M'));
-
-                // assign the value to the element (i, j) of the matrix M
-                matchMatrix.setValue(i,j, value);
-
-                // compute the value of the element (i, j) of the matrix I
-                value = matchMatrix.getValue(i-1, j) * transitionMatrix.getProbability('M', 'I') +
-                        insertionMatrix.getValue(i-1, j) * transitionMatrix.getProbability('I', 'I');
-
-                // assign the value to the element (i, j) of the matrix I
-                insertionMatrix.setValue(i, j, value);
-
-                // compute the value of the element (i, j) of the matrix D
-                value = matchMatrix.getValue(i, j-1) * transitionMatrix.getProbability('M', 'D') +
-                        deletionMatrix.getValue(i, j-1) * transitionMatrix.getProbability('D', 'D');
-
-                // assign the value to the element (i, j) of the matrix D
-                deletionMatrix.setValue(i, j, value);
-
-                int ID = omp_get_thread_num();
-                cout << "Analyzing chars " << read.getChar(i) << " and "<< haplotype.getChar(j) << ", executed by ThreadID: " << ID << ", during cycle i=" << i << ", j=" << j << endl;
-
-                cout << "Matrice M\n\n" << matchMatrix << endl;
-
-                cout << "Matrice I\n\n" << insertionMatrix << endl;
-
-                cout << "Matrice D\n\n" << deletionMatrix << endl;
-
-                cout << "###########################################################################################################################################################" << endl;
-
-
-            }
+#pragma omp parallel for default(none) shared(k)
+        for (int i = k; i >= 0; i--) {
+            execMatricesComputation(i, k - i);
         }
 
-    }*/
+    }
 
-
-    // best implementation I was able to find in order to correctly execute the task of computing the algorithm
-    // exploiting the fact that the computation along the anti-diagonal path on the matrix are independent
-    // however, some threads are used for checking the condition of validity of the indexes in the matrix
-    // therefore, actually the optimal computation is not performed.
-    // waiting to understand better how to exploit OpenMP in order to execute the access to the cells of the matrix
-    // along the anti-diagonal without losing for cycles for checking the validity of the indexes
-    /*int j;
-
-    for(int k = 0; k < haplotype.getLength() + read.getLength()-1; k++) {
-#pragma omp parallel for default(none) shared(haplotype, k, cout) private(j)
-        for (int i=k; i>=0; i--) {
-            j = k - i;
-            if (i < read.getLength() && j<haplotype.getLength()) {
-#pragma omp critical
-                {
-                    execMatricesComputation(i, j);
-                }
-            }
+/* access to the inner part of the matrix (just in case the matrix is not squared)
+ * A = accessed
+ * N = Not accessed
+ *
+ * Example with matrix M(3x5)
+ *
+ * | N | N | N | A | A |
+ * | N | N | A | A | N |
+ * | N | A | A | N | N |
+ *
+ */
+    for (int k = 1; k <= haplotype.getLength() - read.getLength(); k++) {
+        cout << "inizio ciclo" << endl;
+#pragma omp parallel for default(none) shared(k, cout, read)
+        for (int i = read.getLength() - 1; i >= 0; i--) {
+            execMatricesComputation(i, k + read.getLength() - i - 1);
         }
-    }*/
+        cout << "fine ciclo" << endl;
+    }
 
-    firstLoop();
+/* access to the lower triangle of the matrix
+ * A = accessed
+ * N = Not accessed
+ *
+ * Example with matrix M(3x5)
+ *
+ * | N | N | N | N | N |
+ * | N | N | N | N | A |
+ * | N | N | N | A | A |
+ *
+ */
+    for (int k = haplotype.getLength() - read.getLength() + 1; k<haplotype.getLength(); k++) {
 
+#pragma omp parallel for default(none) shared(haplotype, read, cout, k)
+        for (int j = k; j < haplotype.getLength(); j++) {
+            execMatricesComputation( read.getLength() - (j - k) -1 , j);
+        }
 
-    cout << "finito primo loop" << endl;
-//#pragma omp barrier
-
-    secondLoop();
-
-//#pragma omp barrier
-
-    thirdLoop();
-
-    // was not able to split the access in two for loops because cannot find a way to
-    // close the parallel section and reopen it in the next for loop
-
+    }
 
 
     // result of the algorithm according to the book:
@@ -191,43 +162,6 @@ void PairHMM::run() {
 
 }
 
-
-void PairHMM:: firstLoop() {
-
-    for (int k = 0; k < read.getLength(); k++) {
-
-#pragma omp parallel for default(none) shared(k)
-        for (int i = k; i >= 0; i--) {
-            execMatricesComputation(i, k - i);
-        }
-
-    }
-}
-
-void PairHMM:: secondLoop() {
-
-    for (int k = 1; k < haplotype.getLength() - read.getLength(); k++) {
-        cout << "inizio ciclo" << endl;
-#pragma omp parallel for default(none) shared(k, cout, read)
-        for (int i = read.getLength() - 1; i >= 0; i--) {
-            execMatricesComputation(i, k + read.getLength() - i - 1);
-        }
-        cout << "fine ciclo" << endl;
-    }
-
-}
-
-void PairHMM::thirdLoop() {
-
-    for (int k = haplotype.getLength() - read.getLength(); k<haplotype.getLength(); k++) {
-
-#pragma omp parallel for default(none) shared(haplotype, read, cout, k)
-        for (int j = k; j < haplotype.getLength(); j++) {
-            execMatricesComputation( read.getLength() - (j - k) -1 , j);
-        }
-
-    }
-}
 
 float PairHMM::getPerBaseEmission(char readChar, char haplotypeChar) const {
     float errorRate = getErrorRate();
@@ -277,19 +211,8 @@ void PairHMM::execMatricesComputation(int i, int j) {
 
     int ID = omp_get_thread_num();
 
-    value = prior *
-            (matchMatrix.getValue(i - 1, j - 1) * transitionMatrix.getProbability('M', 'M') +
-             insertionMatrix.getValue(i - 1, j - 1) * transitionMatrix.getProbability('I', 'M') +
-             deletionMatrix.getValue(i - 1, j - 1) * transitionMatrix.getProbability('D', 'M'));
-
 #pragma omp critical
     {
-
-        cout << "the value is " << prior << " * (" << matchMatrix.getValue(i - 1, j - 1) << " * "
-             << transitionMatrix.getProbability('M', 'M') << " + " <<
-             insertionMatrix.getValue(i - 1, j - 1) << " * " << transitionMatrix.getProbability('I', 'M') << " + " <<
-             deletionMatrix.getValue(i - 1, j - 1) << " * " << transitionMatrix.getProbability('D', 'M') << ") = "
-             << value << endl;
 
         cout << "Analyzing chars " << read.getChar(i) << " and " << haplotype.getChar(j)
              << ", executed by ThreadID: " << ID << ", during cycle i=" << i << ", j=" << j << endl;

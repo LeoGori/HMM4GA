@@ -46,10 +46,5 @@ public:
 private:
     void execMatricesComputation(int posX, int posY);
 
-    void firstLoop();
-
-    void secondLoop();
-
-    void thirdLoop();
 };
 
