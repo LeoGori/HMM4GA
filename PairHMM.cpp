@@ -21,7 +21,7 @@ PairHMM::PairHMM() {
         read.getNext();
 
     // set the dimension of M, I and D matrices to (n x m), where n is the length of the read, and m is the length of the haplotype
-    // all the matrices are completely 0-filled in this step
+    // all the matrices are completely filled by -1 values in this step
     matchMatrix.setDimension(read.getLength(), haplotype.getLength());
 
     insertionMatrix.setDimension(read.getLength(), haplotype.getLength());
@@ -30,10 +30,6 @@ PairHMM::PairHMM() {
 
 
     // following convention described in "references/PHMMFA_Ren_Bertels_Al-Ars.pdf"
-    // the other inizialization values in the matrix
-    // are already initialized, since the matrices M, I and D are completely 0-filled by inizialization
-
-
 
     for(int i=0; i< read.getLength(); i++) {
         deletionMatrix.setValue(i, -1, 0);
@@ -47,14 +43,6 @@ PairHMM::PairHMM() {
         matchMatrix.setValue(-1, j, 0);
         insertionMatrix.setValue(-1, j, 0);
     }
-
-    // following convention described in "Biological Sequence Analysis: Probabilistic Models of Proteins and Nucleic Acids", page 88 (chapter 4.2),
-    /*// set the value of the element in position (-1,-1) of matrix M to 1, while the other inizialization values in the matrix
-    // are already initialized, since the matrices M, I and D are completely 0-filled by inizialization
-    for(int i=0; i< haplotype.getLength(); i++) {
-
-        matchMatrix.setValue(-1, -1, 1);
-    }*/
 
     cout << " The state transition matrix is:\n" << transitionMatrix << endl;
     cout << "###########################################################################################################################################################" << endl;
