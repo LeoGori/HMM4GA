@@ -99,7 +99,7 @@ void DynamicMatrix::setDimension(int readLength, int haplotypeLength) {
     vector<float> values;
     for(int i = 0; i<readLength + 1; i++) {
         for (int j = 0; j < haplotypeLength + 1; j++)
-            values.push_back(0);
+            values.push_back(-1);
         matrix.push_back(values);
         values.clear();
     }
