@@ -31,7 +31,7 @@ The code is entirely written in C++ programming language, with the use of the fo
   mkdir build
   cd build
 ```
-4.Generate the makefiles
+4. Generate the makefiles
 ```
   cmake -G “MinGW Makefiles” ..
 ```
